@@ -1,6 +1,13 @@
-# Gemini CLI
+# Gemini CLI with Multi-LLM Support
 
-Within Gemini CLI, `packages/cli` is the frontend for users to send and receive prompts with the Gemini AI model and its associated tools. For a general overview of Gemini CLI, see the [main documentation page](../index.md).
+This is a fork of the original Gemini CLI that adds support for multiple LLM providers. Within this CLI, `packages/cli` is the frontend for users to send and receive prompts with various LLM providers and their associated tools. For a general overview of the CLI, see the [main documentation page](../index.md).
+
+Supported providers include:
+- Google Gemini (original functionality)
+- OpenAI
+- OpenRouter
+- Anthropic (via compatible endpoints)
+- Local LLMs with OpenAI-compatible endpoints
 
 ## Navigating this section
 
@@ -18,11 +25,11 @@ Gemini CLI can be run in a non-interactive mode, which is useful for scripting a
 The following example pipes a command to Gemini CLI from your terminal:
 
 ```bash
-echo "What is fine tuning?" | gemini
+echo "What is fine tuning?" | geminicli-anyllm
 ```
 
 Gemini CLI executes the command and prints the output to your terminal. Note that you can achieve the same behavior by using the `--prompt` or `-p` flag. For example:
 
 ```bash
-gemini -p "What is fine tuning?"
+geminicli-anyllm -p "What is fine tuning?"
 ```

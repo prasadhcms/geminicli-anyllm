@@ -1,10 +1,10 @@
 {
-  "name": "@google/gemini-cli-core",
-  "version": "0.1.13",
-  "description": "Gemini CLI Core",
+  "name": "geminicli-anyllm-core",
+  "version": "0.1.17",
+  "description": "Gemini CLI Any LLM Core",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/google-gemini/gemini-cli.git"
+    "url": "git+https://github.com/prasadhcms/geminicli-anyllm.git"
   },
   "type": "module",
   "main": "dist/index.js",

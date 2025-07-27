@@ -293,7 +293,7 @@ The CLI automatically loads environment variables from an `.env` file. The loadi
 2.  If not found, it searches upwards in parent directories until it finds an `.env` file or reaches the project root (identified by a `.git` folder) or the home directory.
 3.  If still not found, it looks for `~/.env` (in the user's home directory).
 
-- **`GEMINI_API_KEY`** (Required):
+- **`GEMINI_API_KEY`** (Required for Google Gemini):
   - Your API key for the Gemini API.
   - **Crucial for operation.** The CLI will not function without it.
   - Set this in your shell profile (e.g., `~/.bashrc`, `~/.zshrc`) or an `.env` file.
@@ -301,6 +301,29 @@ The CLI automatically loads environment variables from an `.env` file. The loadi
   - Specifies the default Gemini model to use.
   - Overrides the hardcoded default
   - Example: `export GEMINI_MODEL="gemini-2.5-flash"`
+
+### Multi-LLM Provider Configuration
+
+This fork of the Gemini CLI supports multiple LLM providers through environment variables. To switch between providers, set the following environment variables:
+
+- **`LLM_API_URL`**:
+  - The API endpoint URL for your chosen LLM provider.
+  - Example for OpenAI: `export LLM_API_URL="https://api.openai.com/v1/chat/completions"`
+  - Example for Google Gemini: `export LLM_API_URL="https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"`
+  - Example for OpenRouter: `export LLM_API_URL="https://openrouter.ai/api/v1/chat/completions"`
+  - Example for local LLM: `export LLM_API_URL="http://localhost:8080/v1/chat/completions"`
+
+- **`LLM_API_KEY`**:
+  - The API key for your chosen LLM provider.
+  - Example: `export LLM_API_KEY="your-api-key-here"`
+
+- **`LLM_MODEL`**:
+  - The model name to use with your chosen LLM provider.
+  - Example for OpenAI: `export LLM_MODEL="gpt-3.5-turbo"`
+  - Example for Google Gemini: `export LLM_MODEL="gemini-pro"`
+  - Example for OpenRouter: `export LLM_MODEL="openai/gpt-3.5-turbo"`
+
+When these three environment variables are set, the CLI will use the specified LLM provider instead of the default Google Gemini API. If any of these variables are missing, the CLI will fall back to the original Google Gemini configuration using `GEMINI_API_KEY`, `GEMINI_MODEL`, etc.
 - **`GOOGLE_API_KEY`**:
   - Your Google Cloud API key.
   - Required for using Vertex AI in express mode.

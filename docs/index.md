@@ -1,10 +1,10 @@
-# Welcome to Gemini CLI documentation
+# Welcome to Gemini CLI with Multi-LLM Support Documentation
 
-This documentation provides a comprehensive guide to installing, using, and developing Gemini CLI. This tool lets you interact with Gemini models through a command-line interface.
+This documentation provides a comprehensive guide to installing, using, and developing the Gemini CLI fork with multi-LLM support. This tool lets you interact with various LLM providers through a command-line interface, including OpenAI, OpenRouter, Anthropic, and local LLMs, in addition to the original Google Gemini models.
 
 ## Overview
 
-Gemini CLI brings the capabilities of Gemini models to your terminal in an interactive Read-Eval-Print Loop (REPL) environment. Gemini CLI consists of a client-side application (`packages/cli`) that communicates with a local server (`packages/core`), which in turn manages requests to the Gemini API and its AI models. Gemini CLI also contains a variety of tools for tasks such as performing file system operations, running shells, and web fetching, which are managed by `packages/core`.
+Gemini CLI with Multi-LLM Support brings the capabilities of various LLM providers to your terminal in an interactive Read-Eval-Print Loop (REPL) environment. This fork of the original Gemini CLI consists of a client-side application (`packages/cli`) that communicates with a local server (`packages/core`), which in turn manages requests to various LLM APIs and their AI models. The CLI supports Google Gemini models (original functionality) as well as OpenAI, OpenRouter, Anthropic, and local LLMs with OpenAI-compatible endpoints. Gemini CLI also contains a variety of tools for tasks such as performing file system operations, running shells, and web fetching, which are managed by `packages/core`.
 
 ## Navigating the documentation
 

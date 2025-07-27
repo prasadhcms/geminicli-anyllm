@@ -11,22 +11,23 @@ import { GeminiClient } from '../core/client.js';
 import { Config } from '../config/config.js';
 import { checkNextSpeaker, NextSpeakerResponse } from './nextSpeakerChecker.js';
 import { GeminiChat } from '../core/geminiChat.js';
+import { GoogleGenAIWrapper } from '../core/contentGenerator.js';
 
 // Mock GeminiClient and Config constructor
 vi.mock('../core/client.js');
 vi.mock('../config/config.js');
 
 // Define mocks for GoogleGenAI and Models instances that will be used across tests
-const mockModelsInstance = {
+const mockContentGenerator = {
   generateContent: vi.fn(),
   generateContentStream: vi.fn(),
   countTokens: vi.fn(),
   embedContent: vi.fn(),
-  batchEmbedContents: vi.fn(),
-} as unknown as Models;
+  getProviderName: vi.fn().mockReturnValue('GoogleGenAI'),
+} as unknown as GoogleGenAIWrapper;
 
 const mockGoogleGenAIInstance = {
-  getGenerativeModel: vi.fn().mockReturnValue(mockModelsInstance),
+  getGenerativeModel: vi.fn().mockReturnValue(mockContentGenerator),
   // Add other methods of GoogleGenAI if they are directly used by GeminiChat constructor or its methods
 } as unknown as GoogleGenAI;
 
@@ -65,13 +66,13 @@ describe('checkNextSpeaker', () => {
     mockGeminiClient = new GeminiClient(mockConfigInstance);
 
     // Reset mocks before each test to ensure test isolation
-    vi.mocked(mockModelsInstance.generateContent).mockReset();
-    vi.mocked(mockModelsInstance.generateContentStream).mockReset();
+    vi.mocked(mockContentGenerator.generateContent).mockReset();
+    vi.mocked(mockContentGenerator.generateContentStream).mockReset();
 
     // GeminiChat will receive the mocked instances via the mocked GoogleGenAI constructor
     chatInstance = new GeminiChat(
       mockConfigInstance,
-      mockModelsInstance, // This is the instance returned by mockGoogleGenAIInstance.getGenerativeModel
+      mockContentGenerator, // This is the instance returned by mockGoogleGenAIInstance.getGenerativeModel
       {},
       [], // initial history
     );

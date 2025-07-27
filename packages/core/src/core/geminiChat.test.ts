@@ -15,6 +15,7 @@ import {
 import { GeminiChat } from './geminiChat.js';
 import { Config } from '../config/config.js';
 import { setSimulate429 } from '../utils/testUtils.js';
+import { GoogleGenAIWrapper } from './contentGenerator.js';
 
 // Mocks
 const mockModelsModule = {
@@ -23,7 +24,15 @@ const mockModelsModule = {
   countTokens: vi.fn(),
   embedContent: vi.fn(),
   batchEmbedContents: vi.fn(),
-} as unknown as Models;
+};
+
+const mockContentGenerator = {
+  generateContent: vi.fn(),
+  generateContentStream: vi.fn(),
+  countTokens: vi.fn(),
+  embedContent: vi.fn(),
+  getProviderName: vi.fn().mockReturnValue('GoogleGenAI'),
+} as unknown as GoogleGenAIWrapper;
 
 describe('GeminiChat', () => {
   let chat: GeminiChat;
@@ -51,7 +60,7 @@ describe('GeminiChat', () => {
     // Disable 429 simulation for tests
     setSimulate429(false);
     // Reset history for each test by creating a new instance
-    chat = new GeminiChat(mockConfig, mockModelsModule, config, []);
+    chat = new GeminiChat(mockConfig, mockContentGenerator, config, []);
   });
 
   afterEach(() => {
@@ -75,11 +84,11 @@ describe('GeminiChat', () => {
         ],
         text: () => 'response',
       } as unknown as GenerateContentResponse;
-      vi.mocked(mockModelsModule.generateContent).mockResolvedValue(response);
+      vi.mocked(mockContentGenerator.generateContent).mockResolvedValue(response);
 
       await chat.sendMessage({ message: 'hello' }, 'prompt-id-1');
 
-      expect(mockModelsModule.generateContent).toHaveBeenCalledWith({
+      expect(mockContentGenerator.generateContent).toHaveBeenCalledWith({
         model: 'gemini-pro',
         contents: [{ role: 'user', parts: [{ text: 'hello' }] }],
         config: {},
@@ -105,13 +114,13 @@ describe('GeminiChat', () => {
           text: () => 'response',
         } as unknown as GenerateContentResponse;
       })();
-      vi.mocked(mockModelsModule.generateContentStream).mockResolvedValue(
+      vi.mocked(mockContentGenerator.generateContentStream).mockResolvedValue(
         response,
       );
 
       await chat.sendMessageStream({ message: 'hello' }, 'prompt-id-1');
 
-      expect(mockModelsModule.generateContentStream).toHaveBeenCalledWith({
+      expect(mockContentGenerator.generateContentStream).toHaveBeenCalledWith({
         model: 'gemini-pro',
         contents: [{ role: 'user', parts: [{ text: 'hello' }] }],
         config: {},
@@ -207,7 +216,7 @@ describe('GeminiChat', () => {
       chat.recordHistory(userInput, newModelOutput); // userInput here is for the *next* turn, but history is already primed
 
       // Reset and set up a more realistic scenario for merging with existing history
-      chat = new GeminiChat(mockConfig, mockModelsModule, config, []);
+      chat = new GeminiChat(mockConfig, mockContentGenerator, config, []);
       const firstUserInput: Content = {
         role: 'user',
         parts: [{ text: 'First user input' }],
@@ -250,7 +259,7 @@ describe('GeminiChat', () => {
         role: 'model',
         parts: [{ text: 'Initial model answer.' }],
       };
-      chat = new GeminiChat(mockConfig, mockModelsModule, config, [
+      chat = new GeminiChat(mockConfig, mockContentGenerator, config, [
         initialUser,
         initialModel,
       ]);

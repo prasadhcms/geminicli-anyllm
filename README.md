@@ -1,183 +1,117 @@
-# Gemini CLI
+# Gemini CLI with Multi-LLM Support
 
-[![Gemini CLI CI](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/google-gemini/gemini-cli/actions/workflows/ci.yml)
+This fork of the Gemini CLI adds support for multiple LLM providers that use OpenAI-compatible REST APIs. You can now switch between different LLM providers without modifying any code, using only environment variables or configuration.
 
-![Gemini CLI Screenshot](./docs/assets/gemini-screenshot.png)
+## Supported Providers
 
-This repository contains the Gemini CLI, a command-line AI workflow tool that connects to your
-tools, understands your code and accelerates your workflows.
+The CLI supports any OpenAI-compatible API, including:
 
-With the Gemini CLI you can:
+- OpenAI
+- OpenRouter
+- Anthropic (via compatible endpoints)
+- Local LLMs with OpenAI-compatible endpoints (e.g., llama.cpp, text-generation-webui)
+- Google Gemini (original support retained)
 
-- Query and edit large codebases in and beyond Gemini's 1M token context window.
-- Generate new apps from PDFs or sketches, using Gemini's multimodal capabilities.
-- Automate operational tasks, like querying pull requests or handling complex rebases.
-- Use tools and MCP servers to connect new capabilities, including [media generation with Imagen,
-  Veo or Lyria](https://github.com/GoogleCloudPlatform/vertex-ai-creative-studio/tree/main/experiments/mcp-genmedia)
-- Ground your queries with the [Google Search](https://ai.google.dev/gemini-api/docs/grounding)
-  tool, built into Gemini.
+## Configuration
 
-## Quickstart
+To switch between providers, set the following environment variables:
 
-You have two options to install Gemini CLI.
+### OpenAI
+```bash
+export LLM_API_URL="https://api.openai.com/v1/chat/completions"
+export LLM_API_KEY="your-openai-key"
+export LLM_MODEL="gpt-3.5-turbo"
+```
 
-### With Node
+### Google Gemini (Original)
+```bash
+export LLM_API_URL="https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
+export LLM_API_KEY="your-gemini-key"
+export LLM_MODEL="gemini-pro"
+```
 
-1. **Prerequisites:** Ensure you have [Node.js version 20](https://nodejs.org/en/download) or higher installed.
-2. **Run the CLI:** Execute the following command in your terminal:
+### OpenRouter
+```bash
+export LLM_API_URL="https://openrouter.ai/api/v1/chat/completions"
+export LLM_API_KEY="your-openrouter-key"
+export LLM_MODEL="openai/gpt-3.5-turbo"
+```
 
+### Local LLM (llama.cpp example)
+```bash
+export LLM_API_URL="http://localhost:8080/v1/chat/completions"
+export LLM_API_KEY="sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"  # Not used but required
+export LLM_MODEL="gpt-3.5-turbo"  # Not used but required
+```
+
+## Usage
+
+1. Set the environment variables for your desired provider
+2. Run the CLI as usual:
    ```bash
-   npx https://github.com/google-gemini/gemini-cli
+   npx gemini-cli
    ```
 
-   Or install it with:
+## How It Works
 
+The CLI automatically detects the API endpoint format and adapts the request and response handling accordingly:
+
+- For endpoints containing `chat/completions`, it uses the OpenAI chat format with `messages`
+- For other endpoints, it uses a completion format with `prompt`
+- Response parsing is adapted to extract content from the `choices` array
+
+## Authentication
+
+The CLI automatically handles authentication headers for different providers:
+
+- OpenAI and OpenRouter: Uses `Authorization: Bearer YOUR_API_KEY`
+- Other providers: Uses `X-API-Key: YOUR_API_KEY`
+
+## Limitations
+
+- Embedding functionality is not yet implemented for non-Gemini providers
+- Token counting is not standardized across providers and returns 0 for non-Gemini providers
+- Streaming responses are not yet implemented for non-Gemini providers
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Testing
+
+To test with different providers:
+
+1. OpenAI:
    ```bash
-   npm install -g @google/gemini-cli
+   export LLM_API_URL="https://api.openai.com/v1/chat/completions"
+   export LLM_API_KEY="your-openai-key"
+   export LLM_MODEL="gpt-3.5-turbo"
+   npx gemini-cli "Hello, world!"
    ```
 
-   Then, run the CLI from anywhere:
-
+2. Google Gemini:
    ```bash
-   gemini
+   export LLM_API_URL="https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
+   export LLM_API_KEY="your-gemini-key"
+   export LLM_MODEL="gemini-pro"
+   npx gemini-cli "Hello, world!"
    ```
 
-### With Homebrew
-
-1. **Prerequisites:** Ensure you have [Homebrew](https://brew.sh/) installed.
-2. **Install the CLI** Execute the following command in your terminal:
-
+3. OpenRouter:
    ```bash
-   brew install gemini-cli
+   export LLM_API_URL="https://openrouter.ai/api/v1/chat/completions"
+   export LLM_API_KEY="your-openrouter-key"
+   export LLM_MODEL="openai/gpt-3.5-turbo"
+   npx gemini-cli "Hello, world!"
    ```
 
-   Then, run the CLI from anywhere:
-
+4. Local LLM (llama.cpp example):
    ```bash
-   gemini
+   export LLM_API_URL="http://localhost:8080/v1/chat/completions"
+   export LLM_API_KEY="sk-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"  # Not used but required
+   export LLM_MODEL="gpt-3.5-turbo"  # Not used but required
+   npx gemini-cli "Hello, world!"
    ```
-
-### Common Configuration steps
-
-3. **Pick a color theme**
-4. **Authenticate:** When prompted, sign in with your personal Google account. This will grant you up to 60 model requests per minute and 1,000 model requests per day using Gemini.
-
-You are now ready to use the Gemini CLI!
-
-### Use a Gemini API key:
-
-The Gemini API provides a free tier with [100 requests per day](https://ai.google.dev/gemini-api/docs/rate-limits#free-tier) using Gemini 2.5 Pro, control over which model you use, and access to higher rate limits (with a paid plan):
-
-1. Generate a key from [Google AI Studio](https://aistudio.google.com/apikey).
-2. Set it as an environment variable in your terminal. Replace `YOUR_API_KEY` with your generated key.
-
-   ```bash
-   export GEMINI_API_KEY="YOUR_API_KEY"
-   ```
-
-3. (Optionally) Upgrade your Gemini API project to a paid plan on the API key page (will automatically unlock [Tier 1 rate limits](https://ai.google.dev/gemini-api/docs/rate-limits#tier-1))
-
-### Use a Vertex AI API key:
-
-The Vertex AI API provides a [free tier](https://cloud.google.com/vertex-ai/generative-ai/docs/start/express-mode/overview) using express mode for Gemini 2.5 Pro, control over which model you use, and access to higher rate limits with a billing account:
-
-1. Generate a key from [Google Cloud](https://cloud.google.com/vertex-ai/generative-ai/docs/start/api-keys).
-2. Set it as an environment variable in your terminal. Replace `YOUR_API_KEY` with your generated key and set GOOGLE_GENAI_USE_VERTEXAI to true
-
-   ```bash
-   export GOOGLE_API_KEY="YOUR_API_KEY"
-   export GOOGLE_GENAI_USE_VERTEXAI=true
-   ```
-
-3. (Optionally) Add a billing account on your project to get access to [higher usage limits](https://cloud.google.com/vertex-ai/generative-ai/docs/quotas)
-
-For other authentication methods, including Google Workspace accounts, see the [authentication](./docs/cli/authentication.md) guide.
-
-## Examples
-
-Once the CLI is running, you can start interacting with Gemini from your shell.
-
-You can start a project from a new directory:
-
-```sh
-cd new-project/
-gemini
-> Write me a Gemini Discord bot that answers questions using a FAQ.md file I will provide
-```
-
-Or work with an existing project:
-
-```sh
-git clone https://github.com/google-gemini/gemini-cli
-cd gemini-cli
-gemini
-> Give me a summary of all of the changes that went in yesterday
-```
-
-### Next steps
-
-- Learn how to [contribute to or build from the source](./CONTRIBUTING.md).
-- Explore the available **[CLI Commands](./docs/cli/commands.md)**.
-- If you encounter any issues, review the **[troubleshooting guide](./docs/troubleshooting.md)**.
-- For more comprehensive documentation, see the [full documentation](./docs/index.md).
-- Take a look at some [popular tasks](#popular-tasks) for more inspiration.
-- Check out our **[Official Roadmap](./ROADMAP.md)**
-
-### Troubleshooting
-
-Head over to the [troubleshooting guide](docs/troubleshooting.md) if you're
-having issues.
-
-## Popular tasks
-
-### Explore a new codebase
-
-Start by `cd`ing into an existing or newly-cloned repository and running `gemini`.
-
-```text
-> Describe the main pieces of this system's architecture.
-```
-
-```text
-> What security mechanisms are in place?
-```
-
-### Work with your existing code
-
-```text
-> Implement a first draft for GitHub issue #123.
-```
-
-```text
-> Help me migrate this codebase to the latest version of Java. Start with a plan.
-```
-
-### Automate your workflows
-
-Use MCP servers to integrate your local system tools with your enterprise collaboration suite.
-
-```text
-> Make me a slide deck showing the git history from the last 7 days, grouped by feature and team member.
-```
-
-```text
-> Make a full-screen web app for a wall display to show our most interacted-with GitHub issues.
-```
-
-### Interact with your system
-
-```text
-> Convert all the images in this directory to png, and rename them to use dates from the exif data.
-```
-
-```text
-> Organize my PDF invoices by month of expenditure.
-```
-
-### Uninstall
-
-Head over to the [Uninstall](docs/Uninstall.md) guide for uninstallation instructions.
-
-## Terms of Service and Privacy Notice
-
-For details on the terms of service and privacy notice applicable to your use of Gemini CLI, see the [Terms of Service and Privacy Notice](./docs/tos-privacy.md).
+</content>
+<line_count>105</line_count>
+</write_to_file>

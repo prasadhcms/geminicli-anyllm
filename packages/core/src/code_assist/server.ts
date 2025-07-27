@@ -205,4 +205,8 @@ export class CodeAssistServer implements ContentGenerator {
     const endpoint = process.env.CODE_ASSIST_ENDPOINT ?? CODE_ASSIST_ENDPOINT;
     return `${endpoint}/${CODE_ASSIST_API_VERSION}:${method}`;
   }
+
+  getProviderName(): string {
+    return 'CodeAssistServer';
+  }
 }

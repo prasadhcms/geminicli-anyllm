@@ -5,8 +5,6 @@
 
 This fork of the Gemini CLI adds support for multiple LLM providers that use OpenAI-compatible REST APIs. You can now switch between different LLM providers without modifying any code, using only environment variables or configuration.
 
-![Gemini CLI Demo](docs/assets/gemini-screenshot.png)
-
 ## Features
 
 - **Multi-LLM Support**: Works with OpenAI, OpenRouter, Anthropic, and local LLMs

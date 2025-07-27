@@ -9,7 +9,6 @@
   "workspaces": [
     "packages/*"
   ],
-  "private": "true",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/prasadhcms/geminicli-anyllm.git"
@@ -51,7 +50,7 @@
     "clean": "node scripts/clean.js"
   },
   "bin": {
-    "gemini": "bundle/gemini.js"
+    "geminicli-anyllm": "bundle/gemini.js"
   },
   "files": [
     "bundle/",

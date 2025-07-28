@@ -11,6 +11,7 @@ import { RadioButtonSelect } from './shared/RadioButtonSelect.js';
 import { LoadedSettings, SettingScope } from '../../config/settings.js';
 import { AuthType } from '@google/gemini-cli-core';
 import { validateAuthMethod } from '../../config/auth.js';
+import { MultiLLMConfigDialog } from './MultiLLMConfigDialog.js';
 
 interface AuthDialogProps {
   onSelect: (authMethod: AuthType | undefined, scope: SettingScope) => void;
@@ -59,6 +60,9 @@ export function AuthDialog({
     }
     return null;
   });
+  
+  const [showMultiLLMConfig, setShowMultiLLMConfig] = useState(false);
+  
   const items = [
     {
       label: 'Login with Google',
@@ -77,6 +81,7 @@ export function AuthDialog({
       value: AuthType.USE_GEMINI,
     },
     { label: 'Vertex AI', value: AuthType.USE_VERTEX_AI },
+    { label: 'Configure Multi-LLM Provider', value: AuthType.USE_MULTI_LLM },
   ];
 
   const initialAuthIndex = items.findIndex((item) => {
@@ -99,6 +104,12 @@ export function AuthDialog({
   });
 
   const handleAuthSelect = (authMethod: AuthType) => {
+    if (authMethod === AuthType.USE_MULTI_LLM) {
+      // Show the multi-LLM configuration dialog
+      setShowMultiLLMConfig(true);
+      return;
+    }
+    
     const error = validateAuthMethod(authMethod);
     if (error) {
       setErrorMessage(error);
@@ -125,6 +136,27 @@ export function AuthDialog({
       onSelect(undefined, SettingScope.User);
     }
   });
+
+  // If showing the multi-LLM config dialog, render it instead
+  if (showMultiLLMConfig) {
+    return (
+      <MultiLLMConfigDialog
+        onSelect={(authMethod, scope) => {
+          if (authMethod === AuthType.USE_MULTI_LLM) {
+            // Successfully configured multi-LLM, close the dialog
+            onSelect(authMethod, scope);
+          } else {
+            // Cancelled or returned to auth dialog
+            setShowMultiLLMConfig(false);
+            if (authMethod !== undefined) {
+              onSelect(authMethod, scope);
+            }
+          }
+        }}
+        settings={settings}
+      />
+    );
+  }
 
   return (
     <Box

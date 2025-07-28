@@ -81,6 +81,7 @@ export enum AuthType {
   USE_GEMINI = 'gemini-api-key',
   USE_VERTEX_AI = 'vertex-ai',
   CLOUD_SHELL = 'cloud-shell',
+  USE_MULTI_LLM = 'multi-llm',
 }
 
 export type ContentGeneratorConfig = {
@@ -106,7 +107,7 @@ export function createContentGeneratorConfig(
     const contentGeneratorConfig: ContentGeneratorConfig = {
       model: llmModel,
       apiKey: llmApiKey,
-      authType: AuthType.USE_GEMINI, // Reuse existing auth type
+      authType: AuthType.USE_MULTI_LLM,
       proxy: config?.getProxy(),
     };
     return contentGeneratorConfig;
@@ -199,6 +200,19 @@ export async function createContentGenerator(
       gcConfig,
       sessionId,
     );
+  }
+
+  if (config.authType === AuthType.USE_MULTI_LLM) {
+    // Use the LLM provider abstraction
+    const llmProviderConfig: LLMProviderConfig = {
+      apiUrl: process.env.LLM_API_URL || '',
+      apiKey: process.env.LLM_API_KEY || '',
+      model: process.env.LLM_MODEL || '',
+      headers: httpOptions.headers,
+      proxy: config.proxy,
+    };
+    
+    return createLLMProvider(llmProviderConfig);
   }
 
   if (

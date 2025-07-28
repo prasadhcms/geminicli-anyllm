@@ -38,5 +38,11 @@ export const validateAuthMethod = (authMethod: string): string | null => {
     return null;
   }
 
+  if (authMethod === AuthType.USE_MULTI_LLM) {
+    // For multi-LLM, we don't validate the environment variables here
+    // as they will be validated when the LLM provider is created
+    return null;
+  }
+
   return 'Invalid auth method selected.';
 };

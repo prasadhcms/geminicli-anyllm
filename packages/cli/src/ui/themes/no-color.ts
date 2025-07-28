@@ -21,6 +21,7 @@ const noColorColorsTheme: ColorsTheme = {
   DiffRemoved: '',
   Comment: '',
   Gray: '',
+  GradientColors: ['', '', ''],
 };
 
 export const NoColorTheme: Theme = new Theme(

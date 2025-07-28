@@ -331,6 +331,11 @@ export const useSlashCommandProcessor = (
                     case 'privacy':
                       openPrivacyNotice();
                       return { type: 'handled' };
+                    case 'multi-llm-config':
+                      // For multi-LLM config, we still open the auth dialog
+                      // which will handle the multi-LLM configuration internally
+                      openAuthDialog();
+                      return { type: 'handled' };
                     default: {
                       const unhandled: never = result.dialog;
                       throw new Error(

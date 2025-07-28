@@ -24,7 +24,7 @@ export interface ColorsTheme {
   DiffRemoved: string;
   Comment: string;
   Gray: string;
-  GradientColors?: string[];
+  GradientColors: string[];
 }
 
 export interface CustomTheme extends ColorsTheme {
@@ -47,7 +47,7 @@ export const lightTheme: ColorsTheme = {
   DiffRemoved: '#FFCCCC',
   Comment: '#008000',
   Gray: '#97a0b0',
-  GradientColors: ['#4796E4', '#847ACE', '#C3677F'],
+  GradientColors: ['#FFD700', '#FFD700', '#FFD700'],
 };
 
 export const darkTheme: ColorsTheme = {
@@ -65,7 +65,7 @@ export const darkTheme: ColorsTheme = {
   DiffRemoved: '#430000',
   Comment: '#6C7086',
   Gray: '#6C7086',
-  GradientColors: ['#4796E4', '#847ACE', '#C3677F'],
+  GradientColors: ['#FFD700', '#FFD700', '#FFD700'],
 };
 
 export const ansiTheme: ColorsTheme = {
@@ -83,6 +83,7 @@ export const ansiTheme: ColorsTheme = {
   DiffRemoved: 'red',
   Comment: 'gray',
   Gray: 'gray',
+  GradientColors: ['yellow', 'yellow', 'yellow'],
 };
 
 export class Theme {

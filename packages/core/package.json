@@ -1,7 +1,7 @@
 {
   "name": "geminicli-anyllm-core",
-  "version": "0.1.17",
-  "description": "Gemini CLI Any LLM Core",
+  "version": "0.1.26",
+  "description": "Geminicli-AnyLLM Core",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/prasadhcms/geminicli-anyllm.git"

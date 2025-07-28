@@ -1,16 +1,17 @@
-# Gemini CLI with Multi-LLM Support
+# Geminicli-AnyLLM with Multi-LLM Support
 
 [![NPM Version](https://img.shields.io/npm/v/geminicli-anyllm.svg)](https://npmjs.org/package/geminicli-anyllm)
 [![License](https://img.shields.io/npm/l/geminicli-anyllm.svg)](https://github.com/prasadhcms/geminicli-anyllm/blob/main/LICENSE)
 
-This fork of the Gemini CLI adds support for multiple LLM providers that use OpenAI-compatible REST APIs. You can now switch between different LLM providers without modifying any code, using only environment variables or configuration.
+This fork of the Geminicli-AnyLLM adds support for multiple LLM providers that use OpenAI-compatible REST APIs. You can now switch between different LLM providers without modifying any code, using only environment variables or configuration.
 
 ## Features
 
 - **Multi-LLM Support**: Works with OpenAI, OpenRouter, Anthropic, and local LLMs
 - **No Code Changes**: Switch providers using environment variables only
-- **Backward Compatible**: Retains all original Gemini CLI functionality
+- **Backward Compatible**: Retains all original Geminicli-AnyLLM functionality
 - **Easy Configuration**: Simple environment variable setup
+- **Dynamic Authentication**: Change authentication methods at runtime with the `/auth` command
 - **Cross-Platform**: Works on Windows, macOS, and Linux
 
 ## Supported Providers
@@ -58,6 +59,37 @@ Pipe content for analysis:
 ```bash
 cat document.txt | npx geminicli-anyllm "Summarize this document"
 ```
+
+## Authentication
+
+The CLI automatically handles authentication headers for different providers:
+
+- OpenAI and OpenRouter: Uses `Authorization: Bearer YOUR_API_KEY`
+- Other providers: Uses `X-API-Key: YOUR_API_KEY`
+
+### Changing Authentication Methods
+
+You can change the authentication method at any time by using the `/auth` command within the CLI. This will open a dialog that lets you select a different authentication method without restarting the CLI.
+
+This will give you 4 Options like below. use arrow keys to choose.
+
+How would you like to authenticate for this project?
+
+   1. Login with Google                                  
+   2. Use Gemini API Key                                 
+   3. Vertex AI
+● 4. Configure Multi-LLM Provider                       
+
+(Use Arrow Key to Change) 
+(Press Enter Key to select) 
+
+Then you can Copy paste the 
+1. API URL
+2. API Key
+3. Model
+
+(Press Enter Key to Set) 
+
 
 ## Configuration
 
@@ -127,13 +159,6 @@ The CLI automatically detects the API endpoint format and adapts the request and
 - For other endpoints, it uses a completion format with `prompt`
 - Response parsing is adapted to extract content from the `choices` array
 
-## Authentication
-
-The CLI automatically handles authentication headers for different providers:
-
-- OpenAI and OpenRouter: Uses `Authorization: Bearer YOUR_API_KEY`
-- Other providers: Uses `X-API-Key: YOUR_API_KEY`
-
 ## Advanced Usage
 
 ### Non-Interactive Mode
@@ -185,11 +210,21 @@ The CLI will automatically load the environment variables from the `.env` file.
 
 3. **Connection errors**: Check that your API endpoint URL is correct and accessible
 
+### Multi-LLM Provider Issues
+
+If you see an error message during authentication that says "Error creating contentGenerator: Unsupported authType: multi-llm", you can ignore this error if the multi-LLM provider is working correctly. This error occurs during the initial authentication process but does not affect the actual content generation.
+
+To ensure the multi-LLM provider works correctly across CLI restarts, make sure to save your configuration to a `.env` file as described in the [Configuration Files](#configuration-files) section.
+</content>
+<line_count>215</line_count>
+</write_to_file>
+
 ### Getting Help
 
 - Check the [documentation](docs/index.md)
 - File an issue on [GitHub](https://github.com/prasadhcms/geminicli-anyllm/issues)
 - Use the `/bug` command within the CLI to report issues
+- Use the `/auth` command within the CLI to change authentication methods
 
 ## Contributing
 
@@ -207,5 +242,5 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 
 ## Acknowledgments
 
-- Based on the original [Google Gemini CLI](https://github.com/google-gemini/gemini-cli)
+- Based on the original [Google Geminicli-AnyLLM](https://github.com/google-gemini/gemini-cli)
 - Thanks to all contributors who have helped expand LLM provider support

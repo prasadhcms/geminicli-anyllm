@@ -78,7 +78,7 @@ How would you like to authenticate for this project?
    1. Login with Google                                  
    2. Use Gemini API Key                                 
    3. Vertex AI
-● 4. Configure Multi-LLM Provider                       
+   4. Configure Multi-LLM Provider                       
 
 (Use Arrow Key to Change) 
 (Press Enter Key to select) 

@@ -1,4 +1,4 @@
-# Geminicli-AnyLLM with Multi-LLM Support
+# Geminicli-AnyLLM (GCAL) with Multi-LLM Support
 
 [![NPM Version](https://img.shields.io/npm/v/geminicli-anyllm.svg)](https://npmjs.org/package/geminicli-anyllm)
 [![License](https://img.shields.io/npm/l/geminicli-anyllm.svg)](https://github.com/prasadhcms/geminicli-anyllm/blob/main/LICENSE)

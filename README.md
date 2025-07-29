@@ -34,30 +34,25 @@ Install the CLI globally:
 npm install -g geminicli-anyllm
 ```
 
-Or run directly with npx:
+Check Version:
 
 ```bash
-npx geminicli-anyllm
+geminicli-anyllm --version
+```
+
+Open Teminal in your Project folder or CD to project Folder.
+Then Run geminicli-anyllm
+
+```bash
+geminicli-anyllm
 ```
 
 ### Basic Usage
 
-Start an interactive chat session:
-
-```bash
-npx geminicli-anyllm
-```
-
 Ask a quick question:
 
 ```bash
-npx geminicli-anyllm "What is the capital of France?"
-```
-
-Pipe content for analysis:
-
-```bash
-cat document.txt | npx geminicli-anyllm "Summarize this document"
+"What is the capital of India?"
 ```
 
 ## Authentication
@@ -67,7 +62,7 @@ The CLI automatically handles authentication headers for different providers:
 - OpenAI and OpenRouter: Uses `Authorization: Bearer YOUR_API_KEY`
 - Other providers: Uses `X-API-Key: YOUR_API_KEY`
 
-### Changing Authentication Methods
+### Changing LLM via Authentication Method
 
 You can change the authentication method at any time by using the `/auth` command within the CLI. This will open a dialog that lets you select a different authentication method without restarting the CLI.
 
@@ -90,8 +85,7 @@ Then you can Copy paste the
 
 (Press Enter Key to Set) 
 
-
-## Configuration
+## Configuration Examples
 
 ### Setting Up Your First Provider
 

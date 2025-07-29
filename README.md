@@ -1,7 +1,7 @@
 # Geminicli-AnyLLM (GCAL) with Multi-LLM Support
 
 [![NPM Version](https://img.shields.io/npm/v/geminicli-anyllm.svg)](https://npmjs.org/package/geminicli-anyllm)
-[![License](https://img.shields.io/npm/l/geminicli-anyllm.svg)](https://github.com/prasadhcms/geminicli-anyllm/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/prasadhcms/geminicli-anyllm)](https://github.com/prasadhcms/geminicli-anyllm/blob/main/LICENSE)
 
 This fork of the Geminicli-AnyLLM adds support for multiple LLM providers that use OpenAI-compatible REST APIs. You can now switch between different LLM providers without modifying any code, using only environment variables or configuration.
 

@@ -6,6 +6,16 @@
 
 import { GenerateContentResponse, Part, FunctionCall } from '@google/genai';
 
+/**
+ * Strips markdown code block formatting from text if present.
+ * @param text The text to strip formatting from
+ * @returns The text with markdown code block formatting removed
+ */
+function stripMarkdownCodeBlocks(text: string): string {
+  // Remove leading and trailing markdown code block markers
+  return text.replace(/^```[a-z]*\n/, '').replace(/\n```$/, '');
+}
+
 export function getResponseText(
   response: GenerateContentResponse,
 ): string | undefined {
@@ -20,7 +30,8 @@ export function getResponseText(
   if (textSegments.length === 0) {
     return undefined;
   }
-  return textSegments.join('');
+  const combinedText = textSegments.join('');
+  return stripMarkdownCodeBlocks(combinedText);
 }
 
 export function getResponseTextFromParts(parts: Part[]): string | undefined {
@@ -34,7 +45,8 @@ export function getResponseTextFromParts(parts: Part[]): string | undefined {
   if (textSegments.length === 0) {
     return undefined;
   }
-  return textSegments.join('');
+  const combinedText = textSegments.join('');
+  return stripMarkdownCodeBlocks(combinedText);
 }
 
 export function getFunctionCalls(

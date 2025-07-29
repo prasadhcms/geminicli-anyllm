@@ -178,6 +178,22 @@ export async function createContentGenerator(
   const llmModel = process.env.LLM_MODEL;
 
   if (llmApiUrl && llmApiKey && llmModel) {
+    // Validate that all required environment variables are set
+    if (!llmApiUrl) {
+      throw new Error('LLM_API_URL environment variable is required for multi-LLM provider');
+    }
+    if (!llmApiKey) {
+      throw new Error('LLM_API_KEY environment variable is required for multi-LLM provider');
+    }
+    if (!llmModel) {
+      throw new Error('LLM_MODEL environment variable is required for multi-LLM provider');
+    }
+    
+    // Validate that the URL starts with http:// or https://
+    if (!llmApiUrl.startsWith('http://') && !llmApiUrl.startsWith('https://')) {
+      throw new Error('LLM_API_URL must start with "http://" or "https://"');
+    }
+    
     // Use the LLM provider abstraction
     const llmProviderConfig: LLMProviderConfig = {
       apiUrl: llmApiUrl,
@@ -203,11 +219,31 @@ export async function createContentGenerator(
   }
 
   if (config.authType === AuthType.USE_MULTI_LLM) {
+    // Validate that all required environment variables are set
+    const llmApiUrl = process.env.LLM_API_URL;
+    const llmApiKey = process.env.LLM_API_KEY;
+    const llmModel = process.env.LLM_MODEL;
+    
+    if (!llmApiUrl) {
+      throw new Error('LLM_API_URL environment variable is required for multi-LLM provider');
+    }
+    if (!llmApiKey) {
+      throw new Error('LLM_API_KEY environment variable is required for multi-LLM provider');
+    }
+    if (!llmModel) {
+      throw new Error('LLM_MODEL environment variable is required for multi-LLM provider');
+    }
+    
+    // Validate that the URL starts with http:// or https://
+    if (!llmApiUrl.startsWith('http://') && !llmApiUrl.startsWith('https://')) {
+      throw new Error('LLM_API_URL must start with "http://" or "https://"');
+    }
+    
     // Use the LLM provider abstraction
     const llmProviderConfig: LLMProviderConfig = {
-      apiUrl: process.env.LLM_API_URL || '',
-      apiKey: process.env.LLM_API_KEY || '',
-      model: process.env.LLM_MODEL || '',
+      apiUrl: llmApiUrl,
+      apiKey: llmApiKey,
+      model: llmModel,
       headers: httpOptions.headers,
       proxy: config.proxy,
     };

@@ -1,6 +1,6 @@
 {
   "name": "geminicli-anyllm",
-  "version": "0.1.26",
+  "version": "0.1.35",
   "description": "Geminicli-AnyLLM",
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
     "dist"
   ],
   "config": {
-    "sandboxImageUri": "us-docker.pkg.dev/gemini-code-dev/gemini-cli/sandbox:0.1.26"
+    "sandboxImageUri": "us-docker.pkg.dev/gemini-code-dev/gemini-cli/sandbox:0.1.35"
   },
   "dependencies": {
     "geminicli-anyllm-core": "file:../core",

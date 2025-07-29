@@ -261,17 +261,71 @@ class OpenAICompatibleProvider implements LLMProvider {
       }
     }
     
-    const response = await fetch(url, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(body),
-    });
+    // Log the request for debugging
+    console.log(`Making API request to: ${url}`);
+    console.log(`Request headers: ${JSON.stringify(headers)}`);
+    console.log(`Request body: ${JSON.stringify(body)}`);
     
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}: ${await response.text()}`);
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+      });
+    } catch (error) {
+      throw new Error(`Network error when making API request: ${(error as Error).message}`);
     }
     
-    return await response.json();
+    console.log(`API response status: ${response.status}`);
+    
+    if (!response.ok) {
+      // Try to get the error response as text
+      let errorText: string;
+      try {
+        errorText = await response.text();
+      } catch (error) {
+        errorText = `Failed to read error response: ${(error as Error).message}`;
+      }
+      
+      console.log(`API error response: ${errorText.substring(0, 200)}${errorText.length > 200 ? '...' : ''}`);
+      
+      // Check if the error response is JSON
+      if (errorText.trim().startsWith('{') || errorText.trim().startsWith('[')) {
+        try {
+          const errorJson = JSON.parse(errorText);
+          throw new Error(`API request failed with status ${response.status}: ${JSON.stringify(errorJson)}`);
+        } catch (jsonError) {
+          // If parsing fails, use the raw text
+          throw new Error(`API request failed with status ${response.status}: ${errorText}`);
+        }
+      } else {
+        // If it's not JSON, it's likely an HTML error page
+        throw new Error(`API request failed with status ${response.status}. Server returned: ${errorText.substring(0, 200)}${errorText.length > 200 ? '...' : ''}`);
+      }
+    }
+    
+    // Try to parse the response as JSON
+    let responseText: string;
+    try {
+      responseText = await response.text();
+    } catch (error) {
+      throw new Error(`Failed to read response: ${(error as Error).message}`);
+    }
+    
+    console.log(`API response: ${responseText.substring(0, 200)}${responseText.length > 200 ? '...' : ''}`);
+    
+    // Check if the response is JSON
+    if (responseText.trim().startsWith('{') || responseText.trim().startsWith('[')) {
+      try {
+        return JSON.parse(responseText);
+      } catch (error) {
+        throw new Error(`Failed to parse JSON response: ${(error as Error).message}. Response text: ${responseText.substring(0, 200)}${responseText.length > 200 ? '...' : ''}`);
+      }
+    } else {
+      // If it's not JSON, it's likely an HTML error page
+      throw new Error(`API returned non-JSON response. Response starts with: ${responseText.substring(0, 200)}${responseText.length > 200 ? '...' : ''}`);
+    }
   }
 
   private parseGenerateContentResponse(

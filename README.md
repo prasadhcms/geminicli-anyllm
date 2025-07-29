@@ -52,7 +52,7 @@ geminicli-anyllm
 Ask a quick question:
 
 ```bash
-"What is the capital of India?"
+"What is the capital of France?"
 ```
 
 ## Authentication

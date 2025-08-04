@@ -188,12 +188,6 @@ npx geminicli-anyllm
 
 The CLI will automatically load the environment variables from the `.env` file.
 
-## Limitations
-
-- Embedding functionality is not yet implemented for non-Gemini providers
-- Token counting is not standardized across providers and returns 0 for non-Gemini providers
-- Streaming responses are not yet implemented for non-Gemini providers
-
 ## Troubleshooting
 
 ### Common Issues
@@ -236,5 +230,5 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE](LICENS
 
 ## Acknowledgments
 
-- Based on the original [Google Geminicli-AnyLLM](https://github.com/google-gemini/gemini-cli)
+- Based on the original [Google Gemini CLI](https://github.com/google-gemini/gemini-cli)
 - Thanks to all contributors who have helped expand LLM provider support
